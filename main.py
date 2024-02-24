@@ -5,6 +5,7 @@ from selenium import webdriver
 import datetime as dt
 import configparser
 import keyboard
+import os
 
 # https://chromedriver.chromium.org/downloads  # with VPN
 # https://googlechromelabs.github.io/chrome-for-testing/
@@ -27,15 +28,18 @@ class Crawler:
         print(info)
 
 
-EXECUTABLE_PATH = r"mex-assets\chromedriver.exe"
-CONFIG_PATH = r'mex-assets\config.ini'
-KEY = 'f1'
+
+ENCODING = 'UTF-8'
+DIRECTORY = 'mex-assets'
+CONFIG_PATH = os.path.join(DIRECTORY, 'config.ini')
 
 if __name__ == "__main__":
     parser = configparser.ConfigParser()
     parser.read(CONFIG_PATH, 'utf-8')
 
-    crawler = Crawler(EXECUTABLE_PATH, options=['start-maximized'])
+    KEY = parser['General']['key']
+    EXECUTABLE_PATH = os.path.join(DIRECTORY, parser['General']['executable'])
 
+    crawler = Crawler(EXECUTABLE_PATH, options=['start-maximized'])
     keyboard.wait(KEY, suppress=True)
     crawler.fill(dict(parser['Person']))
