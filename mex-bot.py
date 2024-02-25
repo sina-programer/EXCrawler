@@ -1,8 +1,24 @@
+from selenium.webdriver.common.by import By
 import configparser
 import keyboard
 import os
 
-from crawler import MEXCrawler
+from crawler import CrawlerBase
+
+
+class MEXCrawler(CrawlerBase):
+    url = 'https://nobat.mex.co.ir/'
+
+    def fill(self, info):
+        print('the form is filled!')
+        print(info)
+
+    def _fill(self, info):
+        self.driver.find_element(By.ID, "btnGetSchedule").click()
+        self.driver.find_element(By.ID, 'txtNationalCode').send_keys(info['code'])
+        self.driver.find_element(By.ID, 'txtBirthDate').send_keys(info['birthday'])
+        self.driver.save_screenshot(f'{info["code"]}.png')
+
 
 ENCODING = 'UTF-8'
 DIRECTORY = 'ex-assets'

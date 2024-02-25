@@ -1,8 +1,17 @@
+from selenium.webdriver.common.by import By
 import configparser
 import keyboard
 import os
 
-from crawler import TEXCrawler
+from crawler import CrawlerBase
+
+
+class TEXCrawler(CrawlerBase):
+    url = 'https://edexco.net/have-turn/'
+
+    def look(self):
+        print('start looking...')
+
 
 ENCODING = 'UTF-8'
 DIRECTORY = 'ex-assets'

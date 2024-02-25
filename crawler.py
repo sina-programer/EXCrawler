@@ -1,6 +1,5 @@
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 from selenium import webdriver
 from abc import ABC, abstractmethod
 import os
@@ -8,7 +7,7 @@ import os
 # https://chromedriver.chromium.org/downloads  # with VPN
 # https://googlechromelabs.github.io/chrome-for-testing/
 
-class Crawler(ABC):
+class CrawlerBase(ABC):
 
     @property
     @abstractmethod
@@ -42,20 +41,3 @@ class Crawler(ABC):
 
     def is_home(self):
         return self.current_url == self.url
-
-
-class MEXCrawler(Crawler):
-    url = 'https://nobat.mex.co.ir/'
-
-    def fill(self, info):
-        print('the form is filled!')
-        print(info)
-
-
-
-class TEXCrawler(Crawler):
-    url = 'https://edexco.net/have-turn/'
-
-    def look(self):
-        print('start looking...')
-
