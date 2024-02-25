@@ -33,7 +33,7 @@ class CrawlerBase(ABC):
 
     def go(self, url, delay=0.5):
         self.driver.get(url)
-        self.driver.wait(delay)
+        self.wait(delay)
 
     def home(self, delay=0.5):
         self.go(self.url, delay)
