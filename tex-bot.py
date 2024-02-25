@@ -13,6 +13,7 @@ class TEXCrawler(CrawlerBase):
         return False
 
 
+SECTION = 'Tosee'
 ENCODING = 'UTF-8'
 DIRECTORY = 'ex-assets'
 CONFIG_PATH = os.path.join(DIRECTORY, 'config.ini')
@@ -20,10 +21,11 @@ CONFIG_PATH = os.path.join(DIRECTORY, 'config.ini')
 if __name__ == "__main__":
     parser = configparser.ConfigParser()
     parser.read(CONFIG_PATH, ENCODING)
+    configs = parser[SECTION]
 
     EXECUTABLE_PATH = os.path.join(DIRECTORY, parser['General']['executable'])
-    KEY = parser['Tosee']['key']
-    DELAY = parser['Tosee']['delay']
+    KEY = configs['key']
+    DELAY = configs['delay']
 
     crawler = TEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
 
