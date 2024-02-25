@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser = configparser.ConfigParser()
     parser.read(CONFIG_PATH, ENCODING)
 
-    KEY = parser['General']['key']
+    KEY = parser['Melli']['key']
     EXECUTABLE_PATH = os.path.join(DIRECTORY, parser['General']['executable'])
 
     crawler = MEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
