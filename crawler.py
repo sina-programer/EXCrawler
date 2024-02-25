@@ -28,9 +28,12 @@ class CrawlerBase(ABC):
         if load:
             self.home()
 
+    def wait(self, duration=1):
+        self.driver.implicitly_wait(duration)
+
     def go(self, url, delay=0.5):
         self.driver.get(url)
-        self.driver.implicitly_wait(delay)
+        self.driver.wait(delay)
 
     def home(self, delay=0.5):
         self.go(self.url, delay)
@@ -41,3 +44,7 @@ class CrawlerBase(ABC):
 
     def is_home(self):
         return self.current_url == self.url
+
+    def refresh(self):
+        self.driver.refresh()
+

@@ -9,8 +9,8 @@ from crawler import CrawlerBase
 class TEXCrawler(CrawlerBase):
     url = 'https://edexco.net/have-turn/'
 
-    def look(self):
-        print('start looking...')
+    def is_ready(self):
+        return False
 
 
 ENCODING = 'UTF-8'
@@ -23,9 +23,11 @@ if __name__ == "__main__":
 
     EXECUTABLE_PATH = os.path.join(DIRECTORY, parser['General']['executable'])
     KEY = parser['Tosee']['key']
+    DELAY = parser['Tosee']['delay']
 
     crawler = TEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
+
     keyboard.wait(KEY)
-    if not crawler.is_home():
-        crawler.home()
-    crawler.look()
+    while not crawler.is_ready():
+        crawler.refresh()
+        crawler.wait(DELAY)
