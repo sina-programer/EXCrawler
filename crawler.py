@@ -36,6 +36,13 @@ class Crawler(ABC):
     def home(self, delay=0.5):
         self.go(self.url, delay)
 
+    @property
+    def current_url(self):
+        return self.driver.current_url
+
+    def is_home(self):
+        return self.current_url == self.url
+
 
 class MEXCrawler(Crawler):
     url = 'https://nobat.mex.co.ir/'
