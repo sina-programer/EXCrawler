@@ -44,3 +44,11 @@ class MEXCrawler(Crawler):
         print('the form is filled!')
         print(info)
 
+
+
+class TEXCrawler(Crawler):
+    url = 'https://edexco.net/have-turn/'
+
+    def look(self):
+        print('start looking...')
+
