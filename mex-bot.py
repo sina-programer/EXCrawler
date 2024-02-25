@@ -2,7 +2,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium import webdriver
-import datetime as dt
 import configparser
 import keyboard
 import os
@@ -30,12 +29,12 @@ class Crawler:
 
 
 ENCODING = 'UTF-8'
-DIRECTORY = 'mex-assets'
+DIRECTORY = 'ex-assets'
 CONFIG_PATH = os.path.join(DIRECTORY, 'config.ini')
 
 if __name__ == "__main__":
     parser = configparser.ConfigParser()
-    parser.read(CONFIG_PATH, 'utf-8')
+    parser.read(CONFIG_PATH, ENCODING)
 
     KEY = parser['General']['key']
     EXECUTABLE_PATH = os.path.join(DIRECTORY, parser['General']['executable'])
