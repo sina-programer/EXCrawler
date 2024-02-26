@@ -49,9 +49,15 @@ if __name__ == "__main__":
                 crawler.refresh()
                 crawler.wait(DELAY)
             icon_text = crawler.get_icon_text()
+            winsound.Beep(1000, 1000)
 
         elif level == 1:
-            pass
+            crawler.driver.find_element(By.ID, 'HaveTurnCurrencyTypeId').find_elements(By.TAG_NAME, 'option')[int(person['currency'])].click()
+            quantity = crawler.driver.find_element(By.ID, 'PriceSell')
+            quantity.clear()
+            quantity.send_keys(person['quantity'])
+            crawler.driver.find_element(By.ID, 'IsRules').click()
+            crawler.driver.find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
 
         elif level == 2:
             form = crawler.driver.find_element(By.CLASS_NAME, 'parent-box-input')
@@ -78,5 +84,3 @@ if __name__ == "__main__":
 
         elif level == 4:
             pass
-
-        winsound.Beep(1000, 2000)
