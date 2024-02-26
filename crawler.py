@@ -2,12 +2,17 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from abc import ABC, abstractmethod
+import operator
 import os
 
 # https://chromedriver.chromium.org/downloads  # with VPN
 # https://googlechromelabs.github.io/chrome-for-testing/
 
 class CrawlerBase(ABC):
+
+    click = operator.methodcaller('click')
+    send = operator.methodcaller('send_keys')
+    get_text = operator.methodcaller('getText')
 
     @property
     @abstractmethod
@@ -47,4 +52,7 @@ class CrawlerBase(ABC):
 
     def refresh(self):
         self.driver.refresh()
+
+    def __call__(self):
+        return self.driver
 
