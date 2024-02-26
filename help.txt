@@ -1,0 +1,11 @@
+Currency
+	1 = dollar
+	2 = euro
+
+Gender
+	1 = male
+	2 = female
+
+Nation
+	1 = iranian
+	2 = others
