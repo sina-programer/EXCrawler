@@ -67,6 +67,10 @@ ENCODING = 'UTF-8'
 DIRECTORY = 'ex-assets'
 CONFIG_PATH = os.path.join(DIRECTORY, 'config.ini')
 
+EXECUTABLE_PATH = None
+KEY = None
+DELAY = None
+
 if __name__ == "__main__":
     parser = configparser.ConfigParser()
     parser.read(CONFIG_PATH, ENCODING)
