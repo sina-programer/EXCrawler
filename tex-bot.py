@@ -13,6 +13,10 @@ class TEXCrawler(CrawlerBase):
     def is_icon_visible(self):
         return bool(len(self.driver.find_elements(By.CLASS_NAME, 'cart')))
 
+    def get_icon_text(self):
+        if self.is_icon_visible():
+            return self.driver.find_element(By.CLASS_NAME, 'cart').find_element(By.TAG_NAME, 'p').text
+
 
 SECTION = 'Tosee'
 ENCODING = 'UTF-8'
@@ -34,5 +38,5 @@ if __name__ == "__main__":
     while not crawler.is_icon_visible():
         crawler.refresh()
         crawler.wait(DELAY)
-
+    icon_text = crawler.get_icon_text()
     winsound.Beep(1000, 2000)
