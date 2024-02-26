@@ -2,7 +2,9 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from abc import ABC, abstractmethod
+import winsound
 import operator
+import time
 import os
 
 # https://chromedriver.chromium.org/downloads  # with VPN
@@ -33,8 +35,11 @@ class CrawlerBase(ABC):
         if load:
             self.home()
 
+    def beep(self, frequency=1000, duration=1000):
+        winsound.Beep(frequency, duration)
+
     def wait(self, duration=1):
-        self.driver.implicitly_wait(duration)
+        time.sleep(duration)
 
     def go(self, url, delay=0.5):
         self.driver.get(url)

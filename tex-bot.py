@@ -1,6 +1,5 @@
 from selenium.webdriver.common.by import By
 import configparser
-import winsound
 import keyboard
 import os
 
@@ -14,7 +13,7 @@ class TEXCrawler(CrawlerBase):
         while not self.is_icon_visible():
             self.refresh()
             self.wait(delay)
-        winsound.Beep(1000, 1000)
+        self.beep()
 
     def handle_level1(self):
         self().find_element(By.ID, 'HaveTurnCurrencyTypeId').find_elements(By.TAG_NAME, 'option')[int(person['currency'])].click()
@@ -41,7 +40,7 @@ class TEXCrawler(CrawlerBase):
                 date.click()
                 time.click()
                 self().find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
-                self.wait(3)
+                self.wait(1)
                 if self.level == 4:
                     break
             if self.level == 4:
