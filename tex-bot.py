@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 import configparser
+import winsound
 import keyboard
 import os
 
@@ -33,3 +34,5 @@ if __name__ == "__main__":
     while not crawler.is_icon_visible():
         crawler.refresh()
         crawler.wait(DELAY)
+
+    winsound.Beep(1000, 2000)
