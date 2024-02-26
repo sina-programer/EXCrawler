@@ -9,8 +9,8 @@ from crawler import CrawlerBase
 class TEXCrawler(CrawlerBase):
     url = 'https://edexco.net/have-turn/'
 
-    def is_ready(self):
-        return False
+    def is_icon_visible(self):
+        return bool(len(self.driver.find_elements(By.CLASS_NAME, 'cart')))
 
 
 SECTION = 'Tosee'
@@ -30,6 +30,6 @@ if __name__ == "__main__":
     crawler = TEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
 
     keyboard.wait(KEY)
-    while not crawler.is_ready():
+    while not crawler.is_icon_visible():
         crawler.refresh()
         crawler.wait(DELAY)
