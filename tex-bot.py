@@ -61,12 +61,12 @@ if __name__ == "__main__":
 
         elif level == 2:
             form = crawler.driver.find_element(By.CLASS_NAME, 'parent-box-input')
-            form.find_element(By.ID, 'Name').send_keys(person['name'])
-            form.find_element(By.ID, 'Family').send_keys(person['family'])
+            form.find_element(By.ID, 'Name').send_keys(person['first-name'])
+            form.find_element(By.ID, 'Family').send_keys(person['last-name'])
             form.find_element(By.ID, 'NationalCode').send_keys(person['national-code'])
             form.find_element(By.ID, 'Mobile').send_keys(person['phone'])
             form.find_element(By.ID, 'BirthDate').send_keys(person['birth-date'])
-            crawler.driver.find_element(By.CLASS_NAME, 'para-6').click()
+            crawler.driver.find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
 
         elif level == 3:
             date_box = crawler.driver.find_element(By.ID, 'DateOfAttendance')
