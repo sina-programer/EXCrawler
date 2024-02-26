@@ -33,21 +33,29 @@ class TEXCrawler(CrawlerBase):
         self().find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
 
     def handle_level3(self):
-        date_box = self().find_element(By.ID, 'DateOfAttendance')
-        time_box = self().find_element(By.ID, 'TimeOfAppointment')
-        for date in date_box.find_elements(By.TAG_NAME, 'option')[1:]:
-            for time in time_box.find_elements(By.TAG_NAME, 'option')[1:]:
-                date.click()
-                time.click()
-                self().find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
-                self.wait(1)
-                if self.level == 4:
-                    break
+        i = 1
+        j = 0
+        while True:
+            j += 1
+            dates = self().find_element(By.ID, 'DateOfAttendance').find_elements(By.TAG_NAME, 'option')
+            times = self().find_element(By.ID, 'TimeOfAppointment').find_elements(By.TAG_NAME, 'option')
+            dates[i].click()
+            times[j].click()
+            self().find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
+            self.wait(.5)
+
             if self.level == 4:
                 break
 
+            if len(times) == j+1:
+                j = 1
+                i += 1
+
+            if len(dates) == i+1:
+                break
+
     def handle_level4(self):
-        pass
+        ''' look for branches '''
 
     def is_icon_visible(self):
         return bool(len(self().find_elements(By.CLASS_NAME, 'cart')))
@@ -55,6 +63,9 @@ class TEXCrawler(CrawlerBase):
     def get_icon_text(self):
         if self.is_icon_visible():
             return self().find_element(By.CLASS_NAME, 'cart').find_element(By.TAG_NAME, 'p').text
+
+    def level3_step(self):
+        pass
 
     @property
     def level(self):
