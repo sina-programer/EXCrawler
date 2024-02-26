@@ -10,6 +10,46 @@ from crawler import CrawlerBase
 class TEXCrawler(CrawlerBase):
     url = 'https://edexco.net/have-turn/'
 
+    def handle_level0(self, delay=1):
+        while not self.is_icon_visible():
+            self.refresh()
+            self.wait(delay)
+        winsound.Beep(1000, 1000)
+
+    def handle_level1(self):
+        self.driver.find_element(By.ID, 'HaveTurnCurrencyTypeId').find_elements(By.TAG_NAME, 'option')[int(person['currency'])].click()
+        quantity = self.driver.find_element(By.ID, 'PriceSell')
+        quantity.clear()
+        quantity.send_keys(person['quantity'])
+        self.driver.find_element(By.ID, 'IsRules').click()
+        self.driver.find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
+
+    def handle_level2(self):
+        form = self.driver.find_element(By.CLASS_NAME, 'parent-box-input')
+        form.find_element(By.ID, 'Name').send_keys(person['first-name'])
+        form.find_element(By.ID, 'Family').send_keys(person['last-name'])
+        form.find_element(By.ID, 'NationalCode').send_keys(person['national-code'])
+        form.find_element(By.ID, 'Mobile').send_keys(person['phone'])
+        form.find_element(By.ID, 'BirthDate').send_keys(person['birth-date'])
+        self.driver.find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
+
+    def handle_level3(self):
+        date_box = self.driver.find_element(By.ID, 'DateOfAttendance')
+        time_box = self.driver.find_element(By.ID, 'TimeOfAppointment')
+        for date in date_box.find_elements(By.TAG_NAME, 'option')[1:]:
+            for time in time_box.find_elements(By.TAG_NAME, 'option')[1:]:
+                date.click()
+                time.click()
+                self.driver.find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
+                self.wait(3)
+                if self.level == 4:
+                    break
+            if self.level == 4:
+                break
+
+    def handle_level4(self):
+        pass
+
     def is_icon_visible(self):
         return bool(len(self.driver.find_elements(By.CLASS_NAME, 'cart')))
 
@@ -38,49 +78,17 @@ if __name__ == "__main__":
     DELAY = configs['delay']
 
     crawler = TEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
-    icon_text = ''
 
     while True:
         keyboard.wait(KEY)
         level = crawler.level
-
         if level == 0:
-            while not crawler.is_icon_visible():
-                crawler.refresh()
-                crawler.wait(DELAY)
-            icon_text = crawler.get_icon_text()
-            winsound.Beep(1000, 1000)
-
+            crawler.handle_level0(delay=DELAY)
         elif level == 1:
-            crawler.driver.find_element(By.ID, 'HaveTurnCurrencyTypeId').find_elements(By.TAG_NAME, 'option')[int(person['currency'])].click()
-            quantity = crawler.driver.find_element(By.ID, 'PriceSell')
-            quantity.clear()
-            quantity.send_keys(person['quantity'])
-            crawler.driver.find_element(By.ID, 'IsRules').click()
-            crawler.driver.find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
-
+            crawler.handle_level1()
         elif level == 2:
-            form = crawler.driver.find_element(By.CLASS_NAME, 'parent-box-input')
-            form.find_element(By.ID, 'Name').send_keys(person['first-name'])
-            form.find_element(By.ID, 'Family').send_keys(person['last-name'])
-            form.find_element(By.ID, 'NationalCode').send_keys(person['national-code'])
-            form.find_element(By.ID, 'Mobile').send_keys(person['phone'])
-            form.find_element(By.ID, 'BirthDate').send_keys(person['birth-date'])
-            crawler.driver.find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
-
+            crawler.handle_level2()
         elif level == 3:
-            date_box = crawler.driver.find_element(By.ID, 'DateOfAttendance')
-            time_box = crawler.driver.find_element(By.ID, 'TimeOfAppointment')
-            for date in date_box.find_elements(By.TAG_NAME, 'option')[1:]:
-                for time in time_box.find_elements(By.TAG_NAME, 'option')[1:]:
-                    date.click()
-                    time.click()
-                    crawler.driver.find_element(By.CLASS_NAME, 'para-6').click()
-                    crawler.wait(1)
-                    if crawler.level == 4:
-                        break
-                if crawler.level == 4:
-                    break
-
+            crawler.handle_level3()
         elif level == 4:
-            pass
+            crawler.handle_level4()
