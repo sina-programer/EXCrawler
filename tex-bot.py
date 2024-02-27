@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     EXECUTABLE_PATH = os.path.join(DIRECTORY, parser['General']['executable'])
     KEY = configs['key']
-    DELAY = int(configs['delay'])
+    DELAY = float(configs['delay'])
 
     crawler = TEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
 

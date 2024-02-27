@@ -1,6 +1,5 @@
 from selenium.webdriver.common.by import By
 import configparser
-import keyboard
 import os
 
 from crawler import CrawlerBase
@@ -25,14 +24,20 @@ ENCODING = 'UTF-8'
 DIRECTORY = 'ex-assets'
 CONFIG_PATH = os.path.join(DIRECTORY, 'config.ini')
 
+EXECUTABLE_PATH = None
+DELAY = None
+
 if __name__ == "__main__":
     parser = configparser.ConfigParser()
     parser.read(CONFIG_PATH, ENCODING)
     configs = parser[SECTION]
+    person = parser['Person']
 
-    KEY = configs['key']
     EXECUTABLE_PATH = os.path.join(DIRECTORY, parser['General']['executable'])
+    DELAY = float(configs['delay'])
 
-    crawler = MEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
-    keyboard.wait(KEY, suppress=True)
+    url = input('Enter the link to be filled: ')
+
+    crawler = MEXCrawler(EXECUTABLE_PATH, options=['start-maximized'], load=False)
+    crawler.go(url, delay=DELAY)
     crawler.fill(dict(parser['Person']))
