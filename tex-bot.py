@@ -57,6 +57,9 @@ class TEXCrawler(CrawlerBase):
     def handle_level4(self):
         ''' look for branches '''
 
+    def handle_level5(self):
+        ''' submit final success (maybe screenshot) '''
+
     def is_icon_visible(self):
         return bool(len(self().find_elements(By.CLASS_NAME, 'cart')))
 
@@ -94,15 +97,21 @@ if __name__ == "__main__":
     crawler = TEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
 
     while True:
-        keyboard.wait(KEY)
-        level = crawler.level
-        if level == 0:
-            crawler.handle_level0(delay=DELAY)
-        elif level == 1:
-            crawler.handle_level1()
-        elif level == 2:
-            crawler.handle_level2()
-        elif level == 3:
-            crawler.handle_level3()
-        elif level == 4:
-            crawler.handle_level4()
+        try:
+            keyboard.wait(KEY)
+            level = crawler.level
+            if level == 0:
+                crawler.handle_level0(delay=DELAY)
+            elif level == 1:
+                crawler.handle_level1()
+            elif level == 2:
+                crawler.handle_level2()
+            elif level == 3:
+                crawler.handle_level3()
+            elif level == 4:
+                crawler.handle_level4()
+            elif level == 5:
+                crawler.handle_level5()
+
+        except Exception as error:
+            print(error)
