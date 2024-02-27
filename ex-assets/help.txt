@@ -9,3 +9,7 @@ Gender
 Nation
 	1 = iranian
 	2 = others
+
+Birth-Date
+	be careful about the length of value.
+	each value must be 2-digit.
