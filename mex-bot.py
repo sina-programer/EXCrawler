@@ -70,4 +70,10 @@ if __name__ == "__main__":
 
     crawler = MEXCrawler(EXECUTABLE_PATH, options=['start-maximized'], load=False)
     crawler.go(url, delay=DELAY)
-    crawler.fill(dict(parser['Person']), dictionary)
+
+    try:
+        crawler.fill(dict(parser['Person']), dictionary)
+    except Exception as error:
+        print(error)
+
+    input('press <enter> to exit...')
