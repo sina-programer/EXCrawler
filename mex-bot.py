@@ -15,7 +15,6 @@ class MEXCrawler(CrawlerBase):
         for title_fa, title in translate_dict.items():
             xpath = rf'//span[text()="{title_fa}"]//parent::div//following-sibling::div'
             field = div.find_element(By.XPATH, xpath)
-            field.find_element(By.TAG_NAME, 'input').send_keys(info[title])
 
             if title == 'gender':
                 field.click()
@@ -53,7 +52,7 @@ dictionary = {
     'جنسیت': 'gender',
     'کد پستی': 'post-code',
     'تلفن ثابت': 'phone',
-    'تعداد ارز': 'quantity',
+    'تعداد ارز ': 'quantity',
     'نوع ارز': 'currency',
     'آدرس': 'address',
 }
