@@ -3,6 +3,7 @@ import configparser
 import threading
 import winsound
 import keyboard
+import time
 import os
 
 from crawler import CrawlerBase
@@ -98,14 +99,36 @@ class TEXCrawler(CrawlerBase):
 def beep(freq=1000, duration=2000):
     winsound.Beep(freq, duration)
 
+def thread_beep(**kwargs):
+    threading.Thread(target=beep, kwargs=kwargs).start()
+
+
+def print_figlet(delay=.2):
+    for line in FIGLET.splitlines():
+        print(line)
+        time.sleep(delay)
+
+
 
 EXECUTABLE_PATH = os.path.join('ex-assets', 'chromedriver.exe')
 KEY = 'F2'
 DELAY = 1
+FIGLET = '''\n
+   _____ _               ____
+  / ____(_)             |  __|
+ | (___  _ _ __   __ _  | |__ 
+  \___ \| | '_ \ / _` | |  __|
+  ____) | | | | | (_| |_| |  
+ |_____/|_|_| |_|\__,_(_)_| 
+\n\n'''
+
 
 if __name__ == "__main__":
     tab1 = 'central'
     tab2 = 'ferdousi'
+    print_figlet()
+    print('Welcome to the Bot!')
+
     icon_text = ''
 
     crawler = TEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
@@ -122,7 +145,7 @@ if __name__ == "__main__":
     while True:
         new_icon_text = crawler.get_icon_text()
         if new_icon_text != icon_text:
-            threading.Thread(target=beep).start()
+            thread_beep()
             icon_text = new_icon_text
             if 'مرکزی' in new_icon_text:
                 crawler.switch_tab(tab1)
