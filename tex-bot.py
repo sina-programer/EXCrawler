@@ -1,5 +1,7 @@
 from selenium.webdriver.common.by import By
 import configparser
+import threading
+import winsound
 import keyboard
 import os
 
@@ -9,13 +11,21 @@ from crawler import CrawlerBase
 class TEXCrawler(CrawlerBase):
     url = 'https://edexco.net/have-turn/'
 
+    def handle_levels(self, person):
+        while (level := crawler.level) < 3:
+            if level == 1:
+                self.handle_level1(person)
+            elif level == 2:
+                self.handle_level2(person)
+            self.wait(2)
+
     def handle_level0(self, delay=1):
         while not self.is_icon_visible():
             self.refresh()
             self.wait(delay)
         self.beep()
 
-    def handle_level1(self):
+    def handle_level1(self, person):
         self().find_element(By.ID, 'HaveTurnCurrencyTypeId').find_elements(By.TAG_NAME, 'option')[int(person['currency'])].click()
         quantity = self().find_element(By.ID, 'PriceSell')
         quantity.clear()
@@ -23,7 +33,7 @@ class TEXCrawler(CrawlerBase):
         self().find_element(By.ID, 'IsRules').click()
         self().find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
 
-    def handle_level2(self):
+    def handle_level2(self, person):
         form = self().find_element(By.CLASS_NAME, 'parent-box-input')
         form.find_element(By.ID, 'Name').send_keys(person['first-name'])
         form.find_element(By.ID, 'Family').send_keys(person['last-name'])
@@ -60,58 +70,70 @@ class TEXCrawler(CrawlerBase):
     def handle_level5(self):
         ''' submit final success (maybe screenshot) '''
 
+    def new_tab(self, url, key='newtab'):
+        self().execute_script(f"window.open('{url}', '{key}')")
+
+    def switch_tab(self, key):
+        self().switch_to.window(key)
+
+    def switch_tab_back(self):
+        self().switch_to.window(self().window_handles[0])
+
     def is_icon_visible(self):
         return bool(len(self().find_elements(By.CLASS_NAME, 'cart')))
 
     def get_icon_text(self):
         if self.is_icon_visible():
             return self().find_element(By.CLASS_NAME, 'cart').find_element(By.TAG_NAME, 'p').text
+        return ''
 
-    def level3_step(self):
-        pass
+    def get_level(self):
+        return self.level
 
     @property
     def level(self):
         return len(self().find_element(By.CLASS_NAME, 'right-sec4').find_elements(By.TAG_NAME, 'img')) - 1
 
 
-SECTION = 'Tosee'
-ENCODING = 'UTF-8'
-DIRECTORY = 'ex-assets'
-CONFIG_PATH = os.path.join(DIRECTORY, 'config.ini')
+def beep(freq=1000, duration=2000):
+    winsound.Beep(freq, duration)
 
-EXECUTABLE_PATH = None
-KEY = None
-DELAY = None
+
+EXECUTABLE_PATH = os.path.join('ex-assets', 'chromedriver.exe')
+KEY = 'F2'
+DELAY = 1
 
 if __name__ == "__main__":
-    parser = configparser.ConfigParser()
-    parser.read(CONFIG_PATH, ENCODING)
-    configs = parser[SECTION]
-    person = parser['Person']
-
-    EXECUTABLE_PATH = os.path.join(DIRECTORY, parser['General']['executable'])
-    KEY = configs['key']
-    DELAY = float(configs['delay'])
+    tab1 = 'central'
+    tab2 = 'ferdousi'
+    icon_text = ''
 
     crawler = TEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
 
-    while True:
-        try:
-            keyboard.wait(KEY)
-            level = crawler.level
-            if level == 0:
-                crawler.handle_level0(delay=DELAY)
-            elif level == 1:
-                crawler.handle_level1()
-            elif level == 2:
-                crawler.handle_level2()
-            elif level == 3:
-                crawler.handle_level3()
-            elif level == 4:
-                crawler.handle_level4()
-            elif level == 5:
-                crawler.handle_level5()
+    crawler.new_tab(crawler.url, tab1)
+    crawler.switch_tab(tab1)
+    keyboard.wait(KEY)
 
-        except Exception as error:
-            print(error)
+    crawler.new_tab(crawler.url, tab2)
+    crawler.switch_tab(tab2)
+    keyboard.wait(KEY)
+
+    crawler.switch_tab_back()
+    while True:
+        new_icon_text = crawler.get_icon_text()
+        if new_icon_text != icon_text:
+            threading.Thread(target=beep).start()
+            icon_text = new_icon_text
+            if 'مرکزی' in new_icon_text:
+                crawler.switch_tab(tab1)
+                keyboard.wait(KEY)
+                crawler.switch_tab_back()
+            else:
+                crawler.switch_tab(tab2)
+                break
+
+        else:
+            crawler.refresh()
+            crawler.wait(DELAY)
+
+    input('press <enter> to exit...')
