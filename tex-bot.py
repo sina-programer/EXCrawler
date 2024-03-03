@@ -77,8 +77,11 @@ class TEXCrawler(CrawlerBase):
     def switch_tab(self, key):
         self().switch_to.window(key)
 
+    def switch_tab_idx(self, idx):
+        self().switch_to.window(self.tabs[idx])
+
     def switch_tab_back(self):
-        self().switch_to.window(self().window_handles[0])
+        self.switch_tab_idx(0)
 
     def is_icon_visible(self):
         return bool(len(self().find_elements(By.CLASS_NAME, 'cart')))
@@ -90,6 +93,10 @@ class TEXCrawler(CrawlerBase):
 
     def get_level(self):
         return self.level
+
+    @property
+    def tabs(self):
+        return self().window_handles
 
     @property
     def level(self):
@@ -109,11 +116,10 @@ def print_figlet(delay=.2):
         time.sleep(delay)
 
 
-
 EXECUTABLE_PATH = os.path.join('ex-assets', 'chromedriver.exe')
 KEY = 'F2'
 DELAY = 1
-FIGLET = '''\n
+FIGLET = '''
    _____ _               ____
   / ____(_)             |  __|
  | (___  _ _ __   __ _  | |__ 
@@ -151,7 +157,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            new_icon_text = crawler.get_icon_text()
+            new_icon_text = crawler.get_icon_text().strip()
             if new_icon_text != icon_text:
                 print(f'The icon <{tab_id}> was shown.')
                 icon_text = new_icon_text
