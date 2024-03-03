@@ -66,10 +66,7 @@ class TEXCrawler(CrawlerBase):
                 break
 
     def handle_level4(self):
-        ''' look for branches '''
-
-    def handle_level5(self):
-        ''' submit final success (maybe screenshot) '''
+        self().find_element(By.XPATH, "//button[contains(@text, 'تایید نهایی')]").click()
 
     def new_tab(self, url, key='newtab'):
         self().execute_script(f"window.open('{url}', '{key}')")
@@ -146,7 +143,7 @@ if __name__ == "__main__":
     for tab_id, tab_identifier in tabs.items():
         if tab_id == 'checker':
             continue
-        print(f"Press <{KEY}> to continue for a new tab as <{tab_id}>")
+        print(f"Press <{KEY}> to continue for a new tab as <{tab_id}> (forms must be filled before appearing icon)")
         keyboard.wait(KEY)
         crawler.new_tab(crawler.url, tab_id)
         crawler.switch_tab(tab_id)
@@ -154,23 +151,28 @@ if __name__ == "__main__":
     print(f'Press <{KEY}> to back and refresh constantly!')
     keyboard.wait(KEY)
     crawler.switch_tab_back()
+    print('Notice: when the icon appears, the bot will click on <next-step> and then <final-submit> buttons and take a screenshot from the window of turn.')
 
     while True:
         try:
             new_icon_text = crawler.get_icon_text().strip()
             if new_icon_text != icon_text:
-                print(f'The icon <{tab_id}> was shown.')
                 icon_text = new_icon_text
-
                 tab_id = tabs_inv[icon_text]
+                print(f'The icon <{tab_id}> was shown.')
                 if tab_id == 'checker':
                     crawler.switch_tab_back()
 
                 else:
                     thread_beep()
                     crawler.switch_tab(tab_id)
-                    print(f'When you submitted your turn press <{KEY}> to continue refreshing...')
-                    keyboard.wait(KEY)
+                    crawler().find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
+                    crawler.wait(1)
+                    crawler().find_element(By.XPATH, "//button[contains(@text, 'تایید نهایی')]").click()
+                    crawler.wait(1)
+                    crawler().save_screenshot(f"turn_{time.strftime('%Y%m%d_%H%M%S', time.localtime())}.png")
+                    print('The turn successfully took for', tab_id)
+                    crawler.refresh()
                     crawler.switch_tab_back()
 
             else:
