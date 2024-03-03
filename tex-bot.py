@@ -150,24 +150,29 @@ if __name__ == "__main__":
     crawler.switch_tab_back()
 
     while True:
-        new_icon_text = crawler.get_icon_text()
-        if new_icon_text != icon_text:
-            print(f'The icon <{tab_id}> was shown.')
-            icon_text = new_icon_text
+        try:
+            new_icon_text = crawler.get_icon_text()
+            if new_icon_text != icon_text:
+                print(f'The icon <{tab_id}> was shown.')
+                icon_text = new_icon_text
 
-            tab_id = tabs_inv[icon_text]
-            if tab_id == 'checker':
-                crawler.switch_tab_back()
+                tab_id = tabs_inv[icon_text]
+                if tab_id == 'checker':
+                    crawler.switch_tab_back()
+
+                else:
+                    thread_beep()
+                    crawler.switch_tab(tab_id)
+                    print(f'When you submitted your turn press <{KEY}> to continue refreshing...')
+                    keyboard.wait(KEY)
+                    crawler.switch_tab_back()
 
             else:
-                thread_beep()
-                crawler.switch_tab(tab_id)
-                print(f'When you submitted your turn press <{KEY}> to continue refreshing...')
-                keyboard.wait(KEY)
-                crawler.switch_tab_back()
+                crawler.refresh()
+                crawler.wait(DELAY)
 
-        else:
-            crawler.refresh()
-            crawler.wait(DELAY)
+        except Exception as error:
+            print('Error:', error, 'at', time.ctime())
+
 
     input('press <enter> to exit...')
