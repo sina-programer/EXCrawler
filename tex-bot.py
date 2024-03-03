@@ -124,36 +124,47 @@ FIGLET = '''\n
 
 
 if __name__ == "__main__":
-    tab1 = 'central'
-    tab2 = 'ferdousi'
     print_figlet()
     print('Welcome to the Bot!')
 
     icon_text = ''
+    tabs = {
+        'checker': '',
+        'central': 'شعبه مرکزی',
+        'ferdousi': 'شعبه فردوسی'
+    }
+    tabs_inv = {value: key for key, value in tabs.items()}
 
     crawler = TEXCrawler(EXECUTABLE_PATH, options=['start-maximized'])
 
-    crawler.new_tab(crawler.url, tab1)
-    crawler.switch_tab(tab1)
-    keyboard.wait(KEY)
+    for tab_id, tab_identifier in tabs.items():
+        if tab_id == 'checker':
+            continue
+        print(f"Press <{KEY}> to continue for a new tab as <{tab_id}>")
+        keyboard.wait(KEY)
+        crawler.new_tab(crawler.url, tab_id)
+        crawler.switch_tab(tab_id)
 
-    crawler.new_tab(crawler.url, tab2)
-    crawler.switch_tab(tab2)
+    print(f'Press <{KEY}> to back and refresh constantly!')
     keyboard.wait(KEY)
-
     crawler.switch_tab_back()
+
     while True:
         new_icon_text = crawler.get_icon_text()
         if new_icon_text != icon_text:
-            thread_beep()
+            print(f'The icon <{tab_id}> was shown.')
             icon_text = new_icon_text
-            if 'مرکزی' in new_icon_text:
-                crawler.switch_tab(tab1)
+
+            tab_id = tabs_inv[icon_text]
+            if tab_id == 'checker':
+                crawler.switch_tab_back()
+
+            else:
+                thread_beep()
+                crawler.switch_tab(tab_id)
+                print(f'When you submitted your turn press <{KEY}> to continue refreshing...')
                 keyboard.wait(KEY)
                 crawler.switch_tab_back()
-            else:
-                crawler.switch_tab(tab2)
-                break
 
         else:
             crawler.refresh()
