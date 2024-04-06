@@ -1,20 +1,8 @@
 from selenium.webdriver.common.by import By
-from functools import wraps
-import threading
-import winsound
 import time
 import os
 
 from crawler import CrawlerBase
-
-
-def thread(func):
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        threading.Thread(target=func, args=args, kwargs=kwargs).start()
-
-    return wrapper
 
 
 class TEXCrawler(CrawlerBase):
@@ -32,10 +20,6 @@ class TEXCrawler(CrawlerBase):
         return len(self().find_element(By.CLASS_NAME, 'right-sec4').find_elements(By.TAG_NAME, 'img')) - 1
 
 
-@thread
-def beep(freq=1000, duration=2000):
-    winsound.Beep(freq, duration)
-
 
 EXECUTABLE_PATH = os.path.join('ex-assets', 'chromedriver.exe')
 DELAY = 1
@@ -52,7 +36,7 @@ if __name__ == "__main__":
             print('Text: <', new_icon_text, '> at', time.ctime())
             if new_icon_text != icon_text:
                 icon_text = new_icon_text
-                beep()
+                crawler.beep()
 
         except Exception as error:
             print('Error:', error, 'at', time.ctime())

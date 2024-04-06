@@ -2,6 +2,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from abc import ABC, abstractmethod
+from functools import wraps
+import threading
 import winsound
 import operator
 import time
@@ -36,8 +38,12 @@ class CrawlerBase(ABC):
         if load:
             self.home()
 
-    def beep(self, frequency=1000, duration=1000):
-        winsound.Beep(frequency, duration)
+    @classmethod
+    def beep(cls, frequency=1000, duration=1500, thread=True):
+        if thread:
+            thread_beep(frequency, duration)
+        else:
+            beep(frequency, duration)
 
     def wait(self, duration=1):
         time.sleep(duration)
@@ -87,3 +93,15 @@ class CrawlerBase(ABC):
 
     def __call__(self):
         return self.driver
+
+
+def thread(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        threading.Thread(target=func, args=args, kwargs=kwargs).start()
+    return wrapper
+
+def beep(freq=1000, duration=2000):
+    winsound.Beep(freq, duration)
+
+thread_beep = thread(beep)  # @thread
