@@ -148,39 +148,28 @@ if __name__ == "__main__":
         crawler.new_tab(crawler.url, tab_id)
         crawler.switch_tab(tab_id)
 
-    print(f'Press <{KEY}> to back and refresh constantly!')
+    print(f'Press <{KEY}> to back checkker and refresh constantly!')
     keyboard.wait(KEY)
     crawler.switch_tab_back()
     print('Notice: when the icon appears, the bot will click on <next-step> and then <final-submit> buttons and take a screenshot from the window of turn.')
 
     while True:
         try:
-            new_icon_text = crawler.get_icon_text().strip()
+            crawler.refresh()
+            crawler.wait(DELAY)
+            new_icon_text = crawler.get_icon_text()
             if new_icon_text != icon_text:
                 icon_text = new_icon_text
                 tab_id = tabs_inv[icon_text]
-                print(f'The icon <{tab_id}> was shown.')
-                if tab_id == 'checker':
-                    crawler.switch_tab_back()
-
-                else:
+                print(f'The icon <{tab_id}> was shown at', time.ctime())
+                if tab_id != 'checker':
                     thread_beep()
                     crawler.switch_tab(tab_id)
-                    crawler().find_element(By.XPATH, '//button[text()="مرحله بعد"]').click()
-                    crawler.wait(1)
-                    crawler().find_element(By.XPATH, "//button[contains(@text, 'تایید نهایی')]").click()
-                    crawler.wait(1)
-                    crawler().save_screenshot(f"turn_{time.strftime('%Y%m%d_%H%M%S', time.localtime())}.png")
-                    print('The turn successfully took for', tab_id)
-                    crawler.refresh()
-                    crawler.switch_tab_back()
-
-            else:
-                crawler.refresh()
-                crawler.wait(DELAY)
+                    keyboard.wait(KEY)
+                crawler.switch_tab_back()
 
         except Exception as error:
             print('Error:', error, 'at', time.ctime())
-
+            crawler.switch_tab_back()
 
     input('press <enter> to exit...')
