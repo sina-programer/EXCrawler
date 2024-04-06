@@ -34,13 +34,10 @@ class MEXCrawler(CrawlerBase):
                 field.find_element(By.TAG_NAME, 'input').send_keys(info[title])
 
 
-SECTION = 'Melli'
 ENCODING = 'UTF-8'
 DIRECTORY = 'ex-assets'
-CONFIG_PATH = os.path.join(DIRECTORY, 'config.ini')
-
-EXECUTABLE_PATH = None
-DELAY = None
+CONFIG_PATH = os.path.join(DIRECTORY, 'mex-config.ini')
+EXECUTABLE_PATH = os.path.join(DIRECTORY, 'chromedriver.exe')
 
 dictionary = {
     'نام': 'first-name',
@@ -60,19 +57,15 @@ dictionary = {
 if __name__ == "__main__":
     parser = configparser.ConfigParser()
     parser.read(CONFIG_PATH, ENCODING)
-    configs = parser[SECTION]
-    person = parser['Person']
-
-    EXECUTABLE_PATH = os.path.join(DIRECTORY, parser['General']['executable'])
-    DELAY = float(configs['delay'])
+    person = dict(parser['Person'])
 
     url = input('Enter the link to be filled: ')
 
     crawler = MEXCrawler(EXECUTABLE_PATH, options=['start-maximized'], load=False)
-    crawler.go(url, delay=DELAY)
+    crawler.go(url, delay=1)
 
     try:
-        crawler.fill(dict(parser['Person']), dictionary)
+        crawler.fill(person, dictionary)
     except Exception as error:
         print(error)
 

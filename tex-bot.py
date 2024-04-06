@@ -1,5 +1,4 @@
 from selenium.webdriver.common.by import By
-import configparser
 import keyboard
 import time
 import os

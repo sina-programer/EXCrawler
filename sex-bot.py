@@ -25,9 +25,10 @@ def print_figlet(delay=.2):
 
 
 ENCODING = 'UTF-8'
-DIRECTORY = 'ex-assets'
-CONFIG_PATH = os.path.join(DIRECTORY, 'config.ini')
-EXECUTABLE_PATH = os.path.join('ex-assets', 'chromedriver.exe')
+CONFIG_DIR = 'ex-assets'
+CONFIG_NAME = 'sex-config.ini'
+CONFIG_PATH = os.path.join(CONFIG_DIR, CONFIG_NAME)
+EXECUTABLE_PATH = os.path.join(CONFIG_DIR, 'chromedriver.exe')
 FIGLET = '''
    _____ _               ____
   / ____(_)             |  __|
