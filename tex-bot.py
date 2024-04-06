@@ -1,7 +1,5 @@
 from selenium.webdriver.common.by import By
 import configparser
-import threading
-import winsound
 import keyboard
 import time
 import os
@@ -68,18 +66,6 @@ class TEXCrawler(CrawlerBase):
     def handle_level4(self):
         self().find_element(By.XPATH, "//button[contains(@text, 'تایید نهایی')]").click()
 
-    def new_tab(self, url, key='newtab'):
-        self().execute_script(f"window.open('{url}', '{key}')")
-
-    def switch_tab(self, key):
-        self().switch_to.window(key)
-
-    def switch_tab_idx(self, idx):
-        self().switch_to.window(self.tabs[idx])
-
-    def switch_tab_back(self):
-        self.switch_tab_idx(0)
-
     def is_icon_visible(self):
         return bool(len(self().find_elements(By.CLASS_NAME, 'cart')))
 
@@ -92,19 +78,8 @@ class TEXCrawler(CrawlerBase):
         return self.level
 
     @property
-    def tabs(self):
-        return self().window_handles
-
-    @property
     def level(self):
         return len(self().find_element(By.CLASS_NAME, 'right-sec4').find_elements(By.TAG_NAME, 'img')) - 1
-
-
-def beep(freq=1000, duration=2000):
-    winsound.Beep(freq, duration)
-
-def thread_beep(**kwargs):
-    threading.Thread(target=beep, kwargs=kwargs).start()
 
 
 def print_figlet(delay=.2):

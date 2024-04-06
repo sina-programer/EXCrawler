@@ -1,7 +1,5 @@
 from selenium.webdriver.common.by import By
 import configparser
-import threading
-import winsound
 import time
 import os
 
@@ -18,13 +16,6 @@ class SEXCrawler(CrawlerBase):
         self().find_element(By.XPATH,'//*[@id="new_mobilephone"]').send_keys(person['phone'])
         self().find_element(By.XPATH,'//*[@id="new_birthdate"]').send_keys(person['birth'])
         self().find_element(By.XPATH,'//*[@id="InsertButton"]').click()
-
-
-def beep(freq=1000, duration=2000):
-    winsound.Beep(freq, duration)
-
-def thread_beep(**kwargs):
-    threading.Thread(target=beep, kwargs=kwargs).start()
 
 
 def print_figlet(delay=.2):

@@ -20,7 +20,6 @@ class TEXCrawler(CrawlerBase):
         return len(self().find_element(By.CLASS_NAME, 'right-sec4').find_elements(By.TAG_NAME, 'img')) - 1
 
 
-
 EXECUTABLE_PATH = os.path.join('ex-assets', 'chromedriver.exe')
 DELAY = 1
 
