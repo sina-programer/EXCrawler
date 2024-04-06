@@ -24,6 +24,7 @@ class CrawlerBase(ABC):
         if not os.path.exists(executable_path):
             raise FileExistsError(f"The executable path is not valid! <{executable_path}>")
 
+        self._tab_keys = {}
         self.executable_path = executable_path
         self.service = Service(self.executable_path)
         self.options = Options()
@@ -58,6 +59,31 @@ class CrawlerBase(ABC):
     def refresh(self):
         self.driver.refresh()
 
+    def new_tab(self, url, key='newtab'):
+        counter = 1
+        base_key = key
+        while key in self._tab_keys:
+            counter += 1
+            key = base_key + str(counter)
+
+        self._tab_keys.add(key)
+        self().execute_script(f"window.open('{url}', '{key}')")
+        return key
+
+    def switch_tab(self, key):
+        self().switch_to.window(key)
+
+    def switch_tab_by_idx(self, idx):
+        self().switch_to.window(self.tabs[idx])
+
+    def switch_tab_back(self):
+        self.switch_tab_by_idx(0)
+
+    @property
+    def tabs(self): return self().window_handles
+
+    @property
+    def tab_keys(self): return list(self._tab_keys)
+
     def __call__(self):
         return self.driver
-
